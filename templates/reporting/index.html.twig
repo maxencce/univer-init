@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reporting{% endblock %}
+
+{% block body %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <h1 class="text-2xl font-semibold mb-6">Dashboard Reporting</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6">
+                <h2 class="text-lg font-medium mb-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0h8v12H6V4z" clip-rule="evenodd" />
+                    </svg>
+                    Reporting par Affaire
+                </h2>
+                <p class="text-gray-600 mb-4">Visualisez les affaires avec un aperçu global des montants, sites et adhérents impliqués.</p>
+                <a href="{{ path('reporting_affaires_list') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Voir les affaires
+                </a>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6">
+                <h2 class="text-lg font-medium mb-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    </svg>
+                    Reporting par Adhérent
+                </h2>
+                <p class="text-gray-600 mb-4">Consultez les données financières regroupées par adhérent, avec détail des sites et des montants par affaire.</p>
+                <a href="{{ path('reporting_adherents_list') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Voir les adhérents
+                </a>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6">
+                <h2 class="text-lg font-medium mb-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10.496 2.132a1 1 0 00-.992 0l-7 4A1 1 0 003 8v7a1 1 0 100 2h14a1 1 0 100-2V8a1 1 0 00.496-1.868l-7-4zM6 9a1 1 0 00-1 1v3a1 1 0 102 0v-3a1 1 0 00-1-1zm3 1a1 1 0 012 0v3a1 1 0 11-2 0v-3zm5-1a1 1 0 00-1 1v3a1 1 0 102 0v-3a1 1 0 00-1-1z" />
+                    </svg>
+                    Reporting par Site
+                </h2>
+                <p class="text-gray-600 mb-4">Analysez les données financières par site, avec détail des BPU appliqués et des montants par catégorie.</p>
+                <a href="{{ path('reporting_sites_list') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Voir les sites
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-blue-50 border border-blue-200 rounded-md p-4 flex">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-sm text-blue-800">
+            Les rapports sont générés à partir des contrats actifs (non archivés) et avec un statut "CONTRAT".
+        </p>
+    </div>
+</div>
+{% endblock %}

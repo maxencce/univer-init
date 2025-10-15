@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'affaire{% endblock %}
+
+{% block body %}
+<div class="px-4 py-5 sm:px-6">
+    <div class="flex items-start space-x-3 mb-4">
+        <a href="{{ path('affaire_show', {id: affaire.master.id}) }}" class="inline-flex items-center text-gray-600 hover:text-gray-800 underline">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7 7-7" />
+            </svg>
+            Retour
+        </a>
+    </div>
+    <div class="md:flex md:items-center md:justify-between">
+        <div class="min-w-0 flex-1">
+            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:tracking-tight">Modifier l'affaire</h2>
+            <p class="mt-1 text-lg font-semibold text-blue-600">{{ affaire.master.code }}</p>
+        </div>
+        <div class="mt-4 md:mt-0 md:ml-4">
+            <form action="{{ path('affaire_activate_version', {id: affaire.master.id}) }}" method="post" class="flex items-center">
+                <input type="hidden" name="_token" value="{{ csrf_token('activate' ~ affaire.master.id) }}">
+                <label for="version_id" class="sr-only">Version</label>
+                <select id="version_id" name="version_id" onchange="this.form.submit()" class="block w-full pr-8 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                    {% for v in affaire.master.getVersions() %}
+                        <option value="{{ v.id }}" {% if affaire.master.currentVersion and affaire.master.currentVersion.id == v.id %}selected{% endif %}>v{{ v.versionNumber }} - {{ v.createdAt ? v.createdAt|date('d/m/Y H:i') : '' }}</option>
+                    {% endfor %}
+                </select>
+                {# Activation automatique à la sélection via onchange #}
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white shadow sm:rounded-lg max-w-2xl mx-auto">
+    <div class="px-4 py-5 sm:p-6">
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                {# Code and client are not editable here; use master view to change them #}
+                
+                <div class="sm:col-span-6">
+                    {{ form_label(form.description, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    <div class="mt-1">
+                        {{ form_widget(form.description, {'attr': {'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm', 'rows': 3}}) }}
+                    </div>
+                    {{ form_errors(form.description, {'attr': {'class': 'mt-2 text-sm text-red-600'}}) }}
+                </div>
+                
+                <div class="sm:col-span-3">
+                    {{ form_label(form.statut, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    <div class="mt-1">
+                        {{ form_widget(form.statut, {'attr': {'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm'}}) }}
+                    </div>
+                    {{ form_errors(form.statut, {'attr': {'class': 'mt-2 text-sm text-red-600'}}) }}
+                </div>
+                
+                <div class="sm:col-span-3">
+                    {{ form_label(form.dateDebut, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    <div class="mt-1">
+                        {{ form_widget(form.dateDebut, {'attr': {'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm'}}) }}
+                    </div>
+                    {{ form_errors(form.dateDebut, {'attr': {'class': 'mt-2 text-sm text-red-600'}}) }}
+                </div>
+                
+                <div class="sm:col-span-3">
+                    {{ form_label(form.dateFin, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    <div class="mt-1">
+                        {{ form_widget(form.dateFin, {'attr': {'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm'}}) }}
+                    </div>
+                    {{ form_errors(form.dateFin, {'attr': {'class': 'mt-2 text-sm text-red-600'}}) }}
+                </div>
+                
+                <div class="sm:col-span-3">
+                    <div class="flex items-start">
+                        <div class="flex h-5 items-center">
+                            {{ form_widget(form.archive, {'attr': {'class': 'h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-primary-500'}}) }}
+                        </div>
+                        <div class="ml-3 text-sm">
+                            {{ form_label(form.archive, null, {'label_attr': {'class': 'font-medium text-gray-700'}}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 pt-5">
+                <a href="{{ path('affaire_index') }}" class="rounded-md bg-white py-2 px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    Retour
+                </a>
+                <button type="submit" class=" btn inline-flex justify-center rounded-md bg-blue-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                    Enregistrer
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<div class="mt-6 bg-white px-6 py-5 sm:rounded-lg shadow border-l-4 border-blue-400">
+    <div class="flex">
+        <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.75.75 0 00.736-.595l.258-1.29a1.5 1.5 0 01.298 2.965 1.5 1.5 0 01-.372.023H9z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="ml-3">
+            <p class="text-sm text-gray-700">
+                Pour ajouter ou modifier des BPU et des adhérents, veuillez retourner à la liste des affaires.
+            </p>
+        </div>
+    </div>
+</div>
+ 
+
+{% endblock %} 

@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Affectation des sites - {{ affaire.master.code }}{% endblock %}
+
+{% block body %}
+<div class="w-full px-4 py-6">
+    <div class="flex items-start space-x-3 mb-4">
+        <a href="{{ path('affaire_show', {id: affaire.master.id}) }}" class="inline-flex items-center text-gray-600 hover:text-gray-800 underline">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7 7-7" />
+            </svg>
+            Retour
+        </a>
+    </div>
+    <div class="mb-6 md:mb-8 text-center md:text-left flex flex-col md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Affectation des sites pour {{ affaire.master.code }}</h1>
+            <p class="text-sm text-gray-600 mt-2">Attribuez les sites aux adhérents</p>
+        </div>
+        <a href="{{ path('affaire_index') }}" class="inline-flex items-center mt-4 md:mt-0 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium">Retour</a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <aside class="lg:col-span-1 bg-white rounded-xl shadow-sm p-4">
+            <h2 class="text-lg font-medium text-gray-900 mb-3">Ajouter une affectation</h2>
+            <p class="text-sm text-gray-500 mb-4">Sélectionnez un site et un adhérent pour attribuer la prise en charge.</p>
+            {{ form_start(addForm) }}
+            <div class="space-y-3">
+                <div>
+                    {{ form_label(addForm.site, null, {'label_attr': {'class':'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                    {{ form_widget(addForm.site, {'attr': {'class':'block w-full rounded-md border-gray-300 shadow-sm sm:text-sm'}}) }}
+                </div>
+
+                <div>
+                    {{ form_label(addForm.adherent, null, {'label_attr': {'class':'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                    {{ form_widget(addForm.adherent, {'attr': {'class':'block w-full rounded-md border-gray-300 shadow-sm sm:text-sm'}}) }}
+                </div>
+
+                <div>
+                    {{ form_label(addForm.activite, null, {'label_attr': {'class':'block text-sm font-medium text-gray-700 mb-1'}}) }}
+                    {{ form_widget(addForm.activite, {'attr': {'class':'block w-full rounded-md border-gray-300 shadow-sm sm:text-sm'}}) }}
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="btn w-full inline-flex justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:">Ajouter</button>
+                </div>
+            </div>
+            {{ form_end(addForm) }}
+            {% if not addForm.adherent.vars.choices or addForm.adherent.vars.choices|length == 0 %}
+                <p class="mt-4 text-sm text-yellow-600">Aucun adhérent associé à cette affaire. Ajoutez d'abord des adhérents.</p>
+            {% endif %}
+        </aside>
+
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-4">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">Affectations par site</h2>
+            <div class="grid grid-cols-1 gap-4">
+                {% for siteData in siteList %}
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start border rounded-md p-4">
+                        <div class="flex-1">
+                            {# compute activity coverage for this site #}
+                            {% set has_multitech = false %}
+                            {% set has_elec = false %}
+                            {% set has_cvc = false %}
+                            {% for a in siteData.affectations %}
+                                {% if a.getActivite().value == 'MULTITECH' %}
+                                    {% set has_multitech = true %}
+                                {% endif %}
+                                {% if a.getActivite().value == 'ELEC' %}
+                                    {% set has_elec = true %}
+                                {% endif %}
+                                {% if a.getActivite().value == 'CVC' %}
+                                    {% set has_cvc = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% set activities_complete = has_multitech or (has_elec and has_cvc) %}
+
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="text-sm font-semibold text-gray-900">{{ siteData.site.codeGesec }} <span class="text-gray-500">- {{ siteData.site.nom }}</span></div>
+                                    <div class="text-sm text-gray-500">{{ siteData.site.adresse }}</div>
+                                </div>
+                                <div>
+                                    {% if activities_complete %}
+                                        <span class="inline-flex items-center px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded">Complet</span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800 rounded">Incomplet</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                {% if siteData.affectations is empty %}
+                                    <div class="text-sm italic text-gray-500">Aucune affectation pour ce site.</div>
+                                {% else %}
+                                    <div class="space-y-2">
+                                        {% for a in siteData.affectations %}
+                                            <div class="flex items-center justify-between bg-gray-50 rounded-md p-2">
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="text-sm font-medium text-gray-900">{{ a.getAdherent().getNom() }}</div>
+                                                    <div class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full">{{ a.getActivite().value }}</div>
+                                                </div>
+                                                <div class="text-sm text-gray-600">{{ a.getSousTraitant() ? a.getSousTraitant().getNom() : '' }}</div>
+                                                <div class="ml-4 flex items-center space-x-2">
+                                                    <form action="{{ path('affaire_affectation_remove', {id: affaire.getId()}) }}" method="post" onsubmit="return confirm('Supprimer cette affectation ?');">
+                                                        <input type="hidden" name="affaire_id" value="{{ affaire.getId() }}">
+                                                        <input type="hidden" name="site_id" value="{{ siteData.site.siteId }}">
+                                                        <input type="hidden" name="adherent_id" value="{{ a.getAdherent().getAdherentId() }}">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('remove_affectation' ~ affaire.getId() ~ siteData.site.siteId ~ a.getAdherent().getAdherentId()) }}">
+                                                        <button type="submit" class="inline-flex items-center justify-center p-1 rounded text-red-600 hover:bg-red-50" title="Supprimer" aria-label="Supprimer">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                                                                <path d="M10 11v6"></path>
+                                                                <path d="M14 11v6"></path>
+                                                            </svg>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un client{% endblock %}
+
+{% block body %}
+<div class="px-4 py-5 sm:px-6">
+    <div class="md:flex md:items-center md:justify-between">
+        <div class="min-w-0 flex-1">
+            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:tracking-tight flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+                Créer un nouveau client
+            </h2>
+            <p class="mt-1 text-sm text-gray-600">Ajoutez les informations du client.</p>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                <div class="sm:col-span-3">
+                    {{ form_label(form.nom, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    <div class="mt-1">
+                        {{ form_widget(form.nom, {'attr': {'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+                    </div>
+                    {{ form_errors(form.nom, {'attr': {'class': 'mt-2 text-sm text-red-600'}}) }}
+                </div>
+                
+                <div class="sm:col-span-3">
+                    {{ form_label(form.type, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    <div class="mt-1">
+                        {{ form_widget(form.type, {'attr': {'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+                    </div>
+                    {{ form_errors(form.type, {'attr': {'class': 'mt-2 text-sm text-red-600'}}) }}
+                </div>
+                
+                <div class="sm:col-span-6">
+                    {{ form_label(form.adresse, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    <div class="mt-1">
+                        {{ form_widget(form.adresse, {'attr': {'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+                    </div>
+                    {{ form_errors(form.adresse, {'attr': {'class': 'mt-2 text-sm text-red-600'}}) }}
+                </div>
+                
+                <div class="sm:col-span-3">
+                    {{ form_label(form.siren, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    <div class="mt-1">
+                        {{ form_widget(form.siren, {'attr': {'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+                    </div>
+                    {{ form_errors(form.siren, {'attr': {'class': 'mt-2 text-sm text-red-600'}}) }}
+                </div>
+                
+                <div class="sm:col-span-3">
+                    {{ form_label(form.contactNom, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    <div class="mt-1">
+                        {{ form_widget(form.contactNom, {'attr': {'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+                    </div>
+                    {{ form_errors(form.contactNom, {'attr': {'class': 'mt-2 text-sm text-red-600'}}) }}
+                </div>
+                
+                <div class="sm:col-span-3">
+                    {{ form_label(form.contactEmail, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    <div class="mt-1">
+                        {{ form_widget(form.contactEmail, {'attr': {'class': 'block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'}}) }}
+                    </div>
+                    {{ form_errors(form.contactEmail, {'attr': {'class': 'mt-2 text-sm text-red-600'}}) }}
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 pt-5">
+                <a href="{{ path('client_index') }}" class="rounded-md bg-white py-2 px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    Retour
+                </a>
+                <button type="submit" class="inline-flex justify-center rounded-md bg-blue-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                    Créer
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %} 

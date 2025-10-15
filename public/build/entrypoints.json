@@ -1,0 +1,15 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_hotwired_stimulus_dist_stimulus_js-node_modules_univerjs_preset-sheets-c-1ecc3a.js",
+        "/build/app.js"
+      ],
+      "css": [
+        "/build/vendors-node_modules_hotwired_stimulus_dist_stimulus_js-node_modules_univerjs_preset-sheets-c-1ecc3a.css",
+        "/build/app.css"
+      ]
+    }
+  }
+}

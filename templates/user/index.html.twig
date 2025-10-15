@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+{% block body %}
+<div class="w-full px-4 py-6">
+    <div class="mb-6 md:mb-8 text-center md:text-left flex flex-col md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" style="color: #c99b64;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                Gestion des utilisateurs
+            </h1>
+            <p class="text-sm sm:text-base text-gray-600 mt-2">Gérez les comptes utilisateurs de la plateforme</p>
+        </div>
+        <a href="{{ path('user_new') }}" class="btn inline-flex items-center mt-4 md:mt-0 px-4 py-2 bg-blue-600 text-white rounded-lg transition duration-150 ease-in-out text-sm font-semibold shadow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            Nouvel utilisateur
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md p-4 mb-6">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+                <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Rôle :</label>
+                <select name="role" id="role" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" onchange="this.form.submit()">
+                    <option value="">Tous</option>
+                    {% for role in roles %}
+                        <option value="{{ role.value }}" {% if selected_role == role.value %}selected{% endif %}>{{ role.value }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Statut :</label>
+                <select name="status" id="status" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" onchange="this.form.submit()">
+                    <option value="active" {% if selected_status == 'active' %}selected{% endif %}>Actifs</option>
+                    <option value="inactive" {% if selected_status == 'inactive' %}selected{% endif %}>Inactifs</option>
+                    <option value="" {% if selected_status == '' %}selected{% endif %}>Tous</option>
+                </select>
+            </div>
+            <div>
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Recherche :</label>
+                <input type="text" name="search" id="search" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="Nom ou email" value="{{ search|default('') }}">
+            </div>
+            <div class="flex items-end gap-2">
+                <button type="submit" class="btn inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg transition duration-150 text-sm font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                    Filtrer
+                </button>
+                <a href="{{ path('user_index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-150 text-sm font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Réinitialiser
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gradient-to-r from-blue-50 to-indigo-50">
+                <tr>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700">Nom</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700">Email</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700">Rôle</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700">Adhérent</th>
+                    <th class="px-4 py-3 text-right text-xs font-semibold text-gray-700">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for user in users %}
+                    <tr class="hover:bg-blue-50 transition">
+                        <td class="px-4 py-3 text-sm text-gray-900 font-medium">{{ user.nom }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-600">{{ user.email }}</td>
+                        <td class="px-4 py-3">
+                            <span class="inline-block px-2 py-1 text-xs font-bold
+                            {% if user.role.value == 'ADMIN' %}
+                                bg-purple-100 text-purple-700
+                            {% elseif user.role.value == 'GESEC' %}
+                                bg-blue-100 text-blue-700
+                            {% else %}
+                                bg-gray-100 text-gray-700
+                            {% endif %} rounded-full">
+                                {{ user.role.value }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-sm text-gray-600">
+                            {% if user.role.value == 'ADHERENT' and user.adherent is not null %}
+                                {{ user.adherent.nom }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <div class="flex flex-wrap gap-2 justify-end">
+                                <a href="{{ path('user_edit', {id: user.userId}) }}" class="inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition text-xs font-medium">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/></svg>
+                                    Modifier
+                                </a>
+                                <form action="{{ path('user_disable', {id: user.userId}) }}" method="post" class="inline-block" onsubmit="return confirm('Désactiver cet utilisateur ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('disable' ~ user.userId) }}">
+                                    <button type="submit" class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition text-xs font-medium">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                        Désactiver
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="py-6 px-4 text-center text-sm italic text-gray-500">Aucun utilisateur trouvé.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
